@@ -13,7 +13,7 @@ class CommentSerializers(sz.ModelSerializer):
 
 class PostSerializer(sz.ModelSerializer):
     writer = sz.SerializerMethodField()
-    comments = CommentSerializers(many=True)
+    comments = CommentSerializers(many=True, read_only=True)
 
     def get_writer(self, obj):
         return obj.writer.nickname
