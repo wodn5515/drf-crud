@@ -20,6 +20,7 @@ class Post(models.Model):
     content = models.TextField(verbose_name="내용")
     create_at = models.DateTimeField(verbose_name="작성일시", auto_now_add=True)
     writer = models.ForeignKey(User, on_delete=models.CASCADE)
+    link = models.URLField(verbose_name="링크")
 
     class Meta:
         verbose_name = "게시글"
