@@ -2,7 +2,8 @@ from django.shortcuts import render
 from rest_framework import viewsets as vs
 from rest_framework import permissions as pm
 from .models import Post
-from .serializers import PostSerializer
+from .serializers import PostSerializer, CommentSerializers
+from .mixins import CommentMixin
 
 
 # Create your views here.
@@ -12,7 +13,7 @@ class PostViewSet(vs.ModelViewSet):
     permission_classes = [pm.IsAuthenticatedOrReadOnly]
     
     def get_queryset(self):
-        menu = self.request.GET.get("menu","")
+        menu = self.request.GET.get("menu", "")
         if menu:
             post_list = Post.objects.filter(menu=menu)
         else:
@@ -21,3 +22,12 @@ class PostViewSet(vs.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(writer=self.request.user)
+
+
+class CommentViewSet(CommentMixin):
+    serializer_class = CommentSerializers
+    permission_classes = [pm.IsAuthenticatedOrReadOnly]
+
+    def perform_create(self, serializer):
+        post = Post.objects.get(pk=self.kwargs["post"])
+        serializer.save(post=post, writer=self.request.user)
