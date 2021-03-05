@@ -4,6 +4,6 @@ from .views import PostViewSet, CommentViewSet
 
 router = routers.DefaultRouter()
 router.register("post", PostViewSet, basename="post")
-router.register(r"comment/(?P<post>\d+)", CommentViewSet, basename="comment")
+router.register("comment", CommentViewSet, basename="comment")
 
 urlpatterns = router.urls
