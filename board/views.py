@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import viewsets as vs
 from rest_framework import permissions as pm
-from .models import Post
+from .models import Post, Comment
 from .serializers import PostSerializer, CommentSerializers
 from .mixins import CommentMixin
 
@@ -25,9 +25,10 @@ class PostViewSet(vs.ModelViewSet):
 
 
 class CommentViewSet(CommentMixin):
+    queryset = Comment.objects.all()
     serializer_class = CommentSerializers
     permission_classes = [pm.IsAuthenticatedOrReadOnly]
 
     def perform_create(self, serializer):
-        post = Post.objects.get(pk=self.kwargs["post"])
+        post = Post.objects.get(pk=self.request.GET.get("post", ""))
         serializer.save(post=post, writer=self.request.user)
