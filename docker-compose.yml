@@ -21,8 +21,7 @@ services:
 
   django:
     build:
-      context: .
-      dockerfile: ./Dockerfile
+      context: ./backend
     environment:
       DJANGO_DB_NAME: "${DB_DATABASE}"
       DJANGO_DB_USER: "${DB_USER}"
