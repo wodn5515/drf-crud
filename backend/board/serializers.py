@@ -1,5 +1,5 @@
 from rest_framework import serializers as sz
-from .models import Post, Comment
+from .models import Post, Comment, Board
 
 class CommentSerializers(sz.ModelSerializer):
     writer = sz.SerializerMethodField()
@@ -9,7 +9,8 @@ class CommentSerializers(sz.ModelSerializer):
 
     class Meta:
         model = Comment
-        fields = ["writer", "created_at", "content"]
+        fields = "__all__"
+        read_only_fields = ["writer", "created_at", "post"]
 
 class PostSerializer(sz.ModelSerializer):
     writer = sz.SerializerMethodField()
@@ -21,4 +22,10 @@ class PostSerializer(sz.ModelSerializer):
     class Meta:
         model = Post
         fields = "__all__"
-        read_only_fields = ["writer", "create_at"]
+        read_only_fields = ["writer", "create_at", "board"]
+
+class BoardSerializer(sz.ModelSerializer):
+
+    class Meta:
+        model = Board
+        fields = "__all__"
