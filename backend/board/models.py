@@ -3,7 +3,7 @@ from account.models import User
 
 # Create your models here.
 
-class Menu(models.Model):
+class Board(models.Model):
     name = models.CharField(verbose_name="메뉴명", max_length=10)
 
     class Meta:
@@ -15,12 +15,12 @@ class Menu(models.Model):
     
 
 class Post(models.Model):
-    menu = models.ForeignKey(Menu, on_delete=models.CASCADE)
+    board = models.ForeignKey(Board, on_delete=models.CASCADE)
     title = models.CharField(verbose_name="제목", max_length=50)
     content = models.TextField(verbose_name="내용")
     create_at = models.DateTimeField(verbose_name="작성일시", auto_now_add=True)
     writer = models.ForeignKey(User, on_delete=models.CASCADE)
-    link = models.URLField(verbose_name="링크")
+    link = models.URLField(verbose_name="링크", blank=True)
 
     class Meta:
         verbose_name = "게시글"

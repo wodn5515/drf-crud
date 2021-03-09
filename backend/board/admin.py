@@ -1,7 +1,7 @@
 from django.contrib import admin
-from .models import Menu, Post, Comment
+from .models import Board, Post, Comment
 
 # Register your models here.
-admin.site.register(Menu)
+admin.site.register(Board)
 admin.site.register(Post)
 admin.site.register(Comment)
