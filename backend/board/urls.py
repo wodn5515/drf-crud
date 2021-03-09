@@ -1,9 +1,10 @@
 from django.urls import path, include
 from rest_framework import routers
-from .views import PostViewSet, CommentViewSet
+from .views import PostViewSet, CommentViewSet, BoardViewSet
 
 router = routers.DefaultRouter()
-router.register("post", PostViewSet, basename="post")
-router.register("comment", CommentViewSet, basename="comment")
+router.register(r"boards", BoardViewSet, basename="board")
+router.register(r"boards/(?P<board_pk>\d+)/posts", PostViewSet, basename="post")
+router.register(r"post/(?P<post_pk>\d+)/comment", CommentViewSet, basename="comment")
 
 urlpatterns = router.urls
