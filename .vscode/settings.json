@@ -2,5 +2,5 @@
   "editor.formatOnSave": true,
   "python.formatting.provider": "black",
   "git.ignoreLimitWarning": true,
-  "python.pythonPath": "backend/venv/bin/python3.8"
+  "python.pythonPath": "backend/env/bin/python3.8"
 }
