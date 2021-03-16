@@ -21,6 +21,7 @@ class Post(models.Model):
     create_at = models.DateTimeField(verbose_name="작성일시", auto_now_add=True)
     writer = models.ForeignKey(User, on_delete=models.CASCADE)
     link = models.URLField(verbose_name="링크", blank=True)
+    tag = models.ManyToManyField(User, related_name="posts")
 
     class Meta:
         verbose_name = "게시글"
@@ -34,6 +35,7 @@ class Comment(models.Model):
     writer = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(verbose_name="작성일시", auto_now_add=True)
     content = models.TextField(verbose_name="내용")
+    tag = models.ManyToManyField(User, related_name="comments")
 
     class Meta:
         verbose_name = "댓글"
