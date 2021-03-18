@@ -5,6 +5,8 @@ from django.contrib.auth.models import (
     PermissionsMixin,
     BaseUserManager,
 )
+from django.contrib.auth.validators import ASCIIUsernameValidator
+
 
 
 # Create your models here.
@@ -32,13 +34,16 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
+    """
+    유저 모델
+    """
+    username_validator = ASCIIUsernameValidator()
 
-    objects = UserManager()
-
-    username = models.CharField(_("ID"), max_length=20, unique=True)
+    username = models.CharField(_("ID"), max_length=20, unique=True, validators=[username_validator])
     nickname = models.CharField(_("닉네임"), max_length=16, unique=True)
     is_staff = models.BooleanField(_("스태프 여부"), default=False)
 
+    objects = UserManager()
     USERNAME_FIELD = "username"
     REQUIRED_FIELDS = ["nickname"]
 
