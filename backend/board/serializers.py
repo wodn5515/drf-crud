@@ -29,7 +29,11 @@ class PostSerializer(sz.ModelSerializer):
         return obj.comments.count()
 
 class BoardSerializer(sz.ModelSerializer):
+    post_count = sz.SerializerMethodField()
 
     class Meta:
         model = Board
-        fields = "__all__"
+        fields = ("name", "post_count")
+
+    def get_post_count(self, obj):
+        return obj.posts.count()
