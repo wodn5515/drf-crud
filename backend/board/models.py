@@ -15,13 +15,13 @@ class Board(models.Model):
     
 
 class Post(models.Model):
-    board = models.ForeignKey(Board, on_delete=models.CASCADE)
+    board = models.ForeignKey(Board, on_delete=models.CASCADE, related_name="posts")
     title = models.CharField(verbose_name="제목", max_length=50)
     content = models.TextField(verbose_name="내용")
     create_at = models.DateTimeField(verbose_name="작성일시", auto_now_add=True)
     writer = models.ForeignKey(User, on_delete=models.CASCADE)
     link = models.URLField(verbose_name="링크", blank=True)
-    tag = models.ManyToManyField(User, related_name="posts")
+    tag = models.ManyToManyField(User, related_name="posts", blank=True)
 
     class Meta:
         verbose_name = "게시글"
@@ -31,11 +31,12 @@ class Post(models.Model):
         return self.title
     
 class Comment(models.Model):
+    parent = models.ForeignKey("self", on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="comments")
     writer = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(verbose_name="작성일시", auto_now_add=True)
     content = models.TextField(verbose_name="내용")
-    tag = models.ManyToManyField(User, related_name="comments")
+    tag = models.ManyToManyField(User, related_name="comments", blank=True)
 
     class Meta:
         verbose_name = "댓글"
