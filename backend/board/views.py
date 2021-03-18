@@ -13,6 +13,7 @@ from .permissions import isAdminOrReadOnly
 class BoardViewSet(vs.ModelViewSet):
     serializer_class = BoardSerializer
     permission_classes = [isAdminOrReadOnly]
+    queryset = Board.objects.all()
 
 
 class PostViewSet(vs.ModelViewSet):
