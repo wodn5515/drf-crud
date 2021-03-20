@@ -31,8 +31,8 @@ class Post(models.Model):
         return self.title
     
 class Comment(models.Model):
-    parent = models.ForeignKey("self", on_delete=models.CASCADE)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="comments")
+    parent = models.ForeignKey("self", on_delete=models.CASCADE, related_name="subcomments", null=True, blank=True)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="comments", null=True, blank=True)
     writer = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(verbose_name="작성일시", auto_now_add=True)
     content = models.TextField(verbose_name="내용")
