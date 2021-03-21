@@ -2,17 +2,18 @@ from django.shortcuts import render, get_object_or_404
 
 from rest_framework import viewsets as vs
 from rest_framework import permissions as pm
+from rest_framework.generics import CreateAPIView, DestroyAPIView
 
 from .models import Post, Comment, Board
-from .serializers import PostSerializer, CommentSerializers, BoardSerializer
-from .permissions import isAdminOrReadOnly
+from .serializers import PostSerializer, CommentSerializer, BoardSerializer, SubCommentSerializer
+from .permissions import IsAdminOrReadOnly
 
 
 # Create your views here.
 
 class BoardViewSet(vs.ModelViewSet):
     serializer_class = BoardSerializer
-    permission_classes = [isAdminOrReadOnly]
+    permission_classes = [IsAdminOrReadOnly]
     queryset = Board.objects.all()
 
 
@@ -32,7 +33,7 @@ class PostViewSet(vs.ModelViewSet):
 
 
 class CommentViewSet(vs.ModelViewSet):
-    serializer_class = CommentSerializers
+    serializer_class = CommentSerializer
     permission_classes = [pm.IsAuthenticatedOrReadOnly]
 
     def get_post(self):
@@ -44,4 +45,20 @@ class CommentViewSet(vs.ModelViewSet):
         return comment_list
 
     def perform_create(self, serializer):
-        serializer.save(post=self.get_post(), writer=self.request.user)
+            serializer.save(post=self.get_post(), writer=self.request.user)
+
+
+class SubCommentCreateView(CreateAPIView, DestroyAPIView):
+    serializer_class = SubCommentSerializer
+    permission_classes = [pm.IsAuthenticatedOrReadOnly]
+
+    def get_post(self):
+        post = Post.objects.get(pk=self.kwargs["post_pk"])
+        return post
+
+    def get_comment(self):
+        parent_comment = Comment.objects.get(pk=self.kwargs["comment_pk"])
+        return parent_comment
+
+    def perform_create(self, serializer):
+            serializer.save(parent=self.get_comment(), writer=self.request.user)
