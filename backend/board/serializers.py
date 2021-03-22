@@ -1,5 +1,17 @@
 from rest_framework import serializers as sz
 from .models import Post, Comment, Board
+from account.models import User
+
+
+class TagSerializer(sz.RelatedField):
+    queryset = User.objects.all()
+
+    def to_representation(self, value):
+        return f"{value.nickname}"
+
+    def to_internal_value(self, data):
+        return User.objects.get(username=data)
+
 
 class SubCommentSerializer(sz.ModelSerializer):
     writer = sz.SerializerMethodField()
@@ -30,6 +42,7 @@ class PostSerializer(sz.ModelSerializer):
     writer = sz.SerializerMethodField()
     comments = CommentSerializer(many=True, read_only=True)
     comment_count = sz.SerializerMethodField()
+    tag = TagSerializer(many=True)
 
     class Meta:
         model = Post
