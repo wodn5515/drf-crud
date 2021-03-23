@@ -28,6 +28,7 @@ class SubCommentSerializer(sz.ModelSerializer):
 class CommentSerializer(sz.ModelSerializer):
     writer = sz.SerializerMethodField()
     subcomments = SubCommentSerializer(many=True, read_only=True)
+    tag = TagSerializer(many=True)
 
     class Meta:
         model = Comment
