@@ -6,7 +6,7 @@ from rest_framework.generics import CreateAPIView, DestroyAPIView
 
 from .models import Post, Comment, Board
 from .serializers import PostSerializer, CommentSerializer, BoardSerializer, SubCommentSerializer
-from .permissions import IsAdminOrReadOnly
+from .permissions import IsAdminOrReadOnly, IsOwnerOrReadOnly
 
 
 # Create your views here.
@@ -34,23 +34,7 @@ class PostViewSet(vs.ModelViewSet):
 
 class CommentViewSet(vs.ModelViewSet):
     serializer_class = CommentSerializer
-    permission_classes = [pm.IsAuthenticatedOrReadOnly]
-
-    def get_post(self):
-        post = Post.objects.get(pk=self.kwargs["post_pk"])
-        return post
-        
-    def get_queryset(self):
-        comment_list = Comment.objects.filter(post=self.get_post())
-        return comment_list
-
-    def perform_create(self, serializer):
-            serializer.save(post=self.get_post(), writer=self.request.user)
-
-
-class SubCommentCreateView(CreateAPIView, DestroyAPIView):
-    serializer_class = SubCommentSerializer
-    permission_classes = [pm.IsAuthenticatedOrReadOnly]
+    permission_classes = [IsOwnerOrReadOnly]
 
     def get_post(self):
         post = Post.objects.get(pk=self.kwargs["post_pk"])
@@ -59,6 +43,13 @@ class SubCommentCreateView(CreateAPIView, DestroyAPIView):
     def get_comment(self):
         parent_comment = Comment.objects.get(pk=self.kwargs["comment_pk"])
         return parent_comment
+        
+    def get_queryset(self):
+        comment_list = Comment.objects.filter(post=self.get_post())
+        return comment_list
 
     def perform_create(self, serializer):
+        if self.kwargs["comment_pk"]:
             serializer.save(parent=self.get_comment(), writer=self.request.user)
+        else:
+            serializer.save(post=self.get_post(), writer=self.request.user)
