@@ -41,7 +41,7 @@ class CommentViewSet(vs.ModelViewSet):
         return post
 
     def get_comment(self):
-        parent_comment = Comment.objects.get(pk=self.kwargs["comment_pk"])
+        parent_comment = Comment.objects.get(pk=self.request.GET.get("parent"))
         return parent_comment
         
     def get_queryset(self):
@@ -49,7 +49,7 @@ class CommentViewSet(vs.ModelViewSet):
         return comment_list
 
     def perform_create(self, serializer):
-        if self.kwargs["comment_pk"]:
+        if self.request.GET.get("parent", False):
             serializer.save(parent=self.get_comment(), writer=self.request.user)
         else:
             serializer.save(post=self.get_post(), writer=self.request.user)
