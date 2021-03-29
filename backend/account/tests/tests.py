@@ -19,4 +19,12 @@ class AccountTestCase(TestCase):
             "password": "dms0300!"
         }
         response = client.post("/account/register/", json.dumps(data), content_type="application/json")
-        self.assertEqual(response.status_code, 201)
+        self.assertEquals(response.status_code, 201)
+
+    def test_user_login(self):
+        data = {
+            "username": "testcase",
+            "password": "testcase"
+        }
+        response = client.post("/account/login/", json.dumps(data), content_type="application/json")
+        self.assertEquals(response.status_code, 201)
