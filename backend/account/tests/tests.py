@@ -28,3 +28,7 @@ class AccountTestCase(TestCase):
         }
         response = client.post("/account/login/", json.dumps(data), content_type="application/json")
         self.assertEquals(response.status_code, 201)
+
+    def test_user_info(self):
+        response = client.get("/account/user/testcase/", content_type="application/json")
+        self.assertEquals(response.json()["nickname"], "testcaseX")
