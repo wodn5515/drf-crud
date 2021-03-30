@@ -4,19 +4,19 @@ from django.http.response import HttpResponse
 from django.utils.decorators import method_decorator
 from django.views.decorators.http import require_POST, require_GET
 
-from rest_framework.generics import CreateAPIView
+from rest_framework.generics import CreateAPIView, RetrieveAPIView
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 from rest_framework.authtoken.models import Token
 from rest_framework import status
 from rest_framework.response import Response
 
-from .serializers import RegisterSerializer
+from .serializers import UserSerializer
 from .models import User
 # Create your views here.
 
 class RegisterView(CreateAPIView):
-    serializer_class = RegisterSerializer
+    serializer_class = UserSerializer
     permission_classes = [AllowAny,]
 
     def create(self, request, *args, **kwargs):
@@ -45,3 +45,10 @@ class LogoutView(APIView):
     def get(self, request):
         user = request.user.auth_token.delete()
         return Response(status=status.HTTP_200_OK)
+
+
+@method_decorator(require_GET, name="dispatch")
+class UserDetailView(RetrieveAPIView):
+    serializer_class = UserSerializer
+    lookup_field = "username"
+    queryset = User.objects.all()
